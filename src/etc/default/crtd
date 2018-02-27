@@ -1,0 +1,11 @@
+#
+# Options for C++ Rest Template (crt)
+#
+# -d : enables Crt to run as a Unix daemon
+# -r : enables REST web service interface
+# -l warning : set log level to waring and above
+#
+# Check: crt -h for a list of all options and their descriptons.
+#
+CRT_CTL_OPTIONS="-d -r -l warning"
+CRT_CTL_LOGFILE="/var/log/crt.log"
