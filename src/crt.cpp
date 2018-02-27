@@ -575,7 +575,7 @@ int main( int argc, char ** argv )
     	poco_information( *g_logger, "main(): REST API Initialized." );
     }
 
-    poco_information( *g_logger, "main(): successful intialization, entering main event loop." );
+    poco_information( *g_logger, "main(): successful initialization, entering main event loop." );
 
     //
     // Do do what we came here to do...

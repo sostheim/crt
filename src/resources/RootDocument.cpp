@@ -26,6 +26,6 @@ void RootDocument::handleRequest( HTTPServerRequest & request,
     ostr << "{ \"endpoints\": [ "
          << "{ \"urn\": \"/v1\", \"supported_methods\" : [ \"GET\" ] },"
          << "{ \"urn\": \"/versions\", \"supported_methods\" : [ \"GET\" ] },"
-         << "{ \"urn\": \"/health\", \"supported_methods\" : [ \"GET\" ] },"
+         << "{ \"urn\": \"/health\", \"supported_methods\" : [ \"GET\" ] }"
          << "] }" << std::endl;
 } 
