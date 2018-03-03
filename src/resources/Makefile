@@ -1,12 +1,6 @@
 include ../globals.make
 
-LIB_SRCS   = APIError.cpp \
-			 RootDocument.cpp \
-			 VersionsEndpoint.cpp \
-			 Version1Endpoints.cpp \
-			 GenericResource.cpp \
-			 MonitorEndpoint.cpp 
-
+LIB_SRCS   = $(wildcard *.cpp)
 LOCAL_OBJS = $(LIB_SRCS:.cpp=.o)
 
 all: $(LOCAL_OBJS)

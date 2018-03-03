@@ -1,8 +1,6 @@
 include ../globals.make
 
-LIB_SRCS = Resource.cpp \
-	       CrtSvc.cpp
-
+LIB_SRCS = $(wildcard *.cpp)
 LOCAL_OBJS = $(LIB_SRCS:.cpp=.o)
 
 .cpp.o:

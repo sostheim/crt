@@ -1,20 +1,21 @@
 include globals.make
 
-LOCAL_SRCS = Router.cpp \
-	     crt.cpp
-
+LOCAL_SRCS = $(wildcard *.cpp)
 LOCAL_OBJS = $(LOCAL_SRCS:.cpp=.o) 
 
-LD_ARGS += -lCrtSvc -lCrtRestInterface 
+PRJ_LIBS = -lCrtSvc -lCrtRestInterface
+PRJ_AR_LIBS = -l:libCrtSvc.a -l:libCrtRestInterface.a
 
 SUBDIRS   = svc api
 SUBDIRS.A = svc.a api.a
 
-all: $(SUBDIRS) $(LOCAL_OBJS)
-	$(CC) $(CC_ARGS) -o crt $(LOCAL_OBJS) $(LD_ARGS)
+all: shared 
+
+shared: $(SUBDIRS) $(LOCAL_OBJS)
+	$(CC) $(CC_ARGS) -o crt $(LOCAL_OBJS) $(PRJ_LIBS) $(LD_ARGS)
 
 static: $(SUBDIRS.A) $(LOCAL_OBJS)
-	$(CC) $(CC_ARGS) -o crt $(LOCAL_OBJS) $(LD_ARGS)
+	$(CC) $(CC_ARGS) -o a.crt $(LOCAL_OBJS) $(PRJ_AR_LIBS) $(AR_ARGS)
 
 svc:
 	cd service && $(MAKE)
@@ -35,26 +36,34 @@ clean:
 	cd service && $(MAKE) clean
 	cd resources && $(MAKE) clean
 	rm -rf pkgdir
-	rm -f lib/* xfer/* *.o *~ *.deb crt
+	rm -f lib/* xfer/* *.o *~ *.deb crt a.crt
 
 transfer:
 	mkdir --mode=755 -p ./xfer
 	rm -f ./xfer/*
+ifneq ("$(wildcard crt)","")
 	cp crt ./xfer/
-	cp ./lib/*.so ./xfer/
-	cd xfer && tar czvf dx_xfer.tgz *
+	cp ./lib/lib*so ./xfer/
+else ifneq ("$(wildcard a.crt)","")	
+	cp a.crt ./xfer/
+endif
+	cd xfer && tar czvf crt_xfer.tgz *
 
 install:
 	mkdir --mode=755 -p /usr/local/crt/bin
-	mkdir --mode=755 -p /usr/local/crt/lib
+ifneq ("$(wildcard crt)","")
 	cp ./crt /usr/local/crt/bin
-	cp ./lib/*.so /usr/local/crt/lib
+	mkdir --mode=755 -p /usr/local/crt/lib
+	cp ./lib/lib*.so /usr/local/crt/lib
 	cp ./etc/ld.so.conf.d/crt.conf /etc/ld.so.conf.d/
+	ldconfig
+else ifneq ("$(wildcard a.crt)","")	
+	cp ./a.crt /usr/local/crt/bin/crt
+endif
 	mkdir --mode=755 -p /var/log/crt/
 	chmod 777 /var/log/crt/
-	ldconfig
 
-package:
+package: shared
         #
         # Always start clean just in case there are residual directories laying 
         # around from a previous, or failed, build.  
@@ -80,8 +89,6 @@ package:
 	mkdir --mode=755 -p ./pkgdir/usr/local/crt/bin
 	mkdir --mode=755 -p ./pkgdir/usr/local/crt/lib
 	mkdir --mode=755 -p ./pkgdir/var/log/crt/
-	mkdir --mode=755 -p ./pkgdir/var/log/crt/
-	chmod 755 ./pkgdir/var/log/crt/
 
         # Conf files
 	cp -r ./etc/ ./pkgdir/

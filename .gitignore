@@ -13,6 +13,7 @@
 *.slo
 *.lo
 crt
+a.crt
 
 # make install, transfer, and package artifacts
 xfer/
