@@ -38,6 +38,16 @@ clean:
 	rm -rf pkgdir
 	rm -f lib/* xfer/* *.o *~ *.deb crt a.crt
 
+docker-image:
+	docker build --rm --pull --tag sostheim/crt:latest .
+
+tag-image: docker-image
+	docker tag sostheim/crt:latest sostheim/crt:$(COMMIT)
+
+push-image: tag-image
+	docker push sostheim/crt:$(COMMIT)
+	docker push sostheim/crt:latest
+
 transfer:
 	mkdir --mode=755 -p ./xfer
 	rm -f ./xfer/*

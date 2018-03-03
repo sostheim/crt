@@ -10,6 +10,11 @@ MINOR=1
 PATCH=1
 VERSION=${MAJOR}.${MINOR}.${PATCH}
 
+# git commit sha
+ifneq ("$(wildcard ../.git)","")
+COMMIT = $(shell git rev-parse HEAD)
+endif 
+
 #
 # and the compile and linker env
 #
