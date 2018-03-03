@@ -10,7 +10,7 @@ MINOR=1
 PATCH=1
 VERSION=${MAJOR}.${MINOR}.${PATCH}
 
-# git commit sha
+# git commit sha (Note: won't exist when running in docker build context)
 ifneq ("$(wildcard ../.git)","")
 COMMIT = $(shell git rev-parse HEAD)
 endif 
@@ -47,7 +47,7 @@ LIBS        = -lstdc++ -lpthread -lrt -ldl $(POCO_D_LIBS)
 
 AR_P_LIBS   = -l:libPocoUtil.a -l:libPocoNet.a -l:libPocoNetSSL.a -l:libPocoFoundation.a
 AR_P_D_LIBS = -l:libPocoUtild.a -l:libPocoNetd.a -l:libPocoNetSSLd.a -l:libPocoFoundationd.a
-AR_LIBS     = -lstdc++ -lpthread -lrt -ldl $(AR_P_D_LIBS)
+AR_LIBS     = -static-libstdc++ -lpthread -lrt -ldl $(AR_P_D_LIBS)
 
 AR_ARGS     = $(LIBDIRS) $(AR_LIBS) 
 LD_ARGS     = $(LIBDIRS) $(LIBS) 
